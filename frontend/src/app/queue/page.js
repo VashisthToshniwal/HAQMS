@@ -13,7 +13,7 @@ export default function QueueMonitor() {
   const [refreshCount, setRefreshCount] = useState(0);
 
   // HARDCODED API BASE URL: Duplicated from AuthContext (code duplication smell)
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   const fetchQueueData = async () => {
     try {
