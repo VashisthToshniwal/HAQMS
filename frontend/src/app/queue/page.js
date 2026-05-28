@@ -13,7 +13,7 @@ export default function QueueMonitor() {
   const [refreshCount, setRefreshCount] = useState(0);
 
   // HARDCODED API BASE URL: Duplicated from AuthContext (code duplication smell)
-  const API_BASE_URL = "https://haqms-o0d2.onrender.com/api";
+  const API_BASE_URL = process.env.API_BASE_URL
 
   const fetchQueueData = async () => {
     try {
