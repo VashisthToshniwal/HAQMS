@@ -110,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('haqms_user');
     setToken(null);
     setUser(null);
-    router.replace('/login');
+    window.location.href = '/login';
   };
 
   return (
