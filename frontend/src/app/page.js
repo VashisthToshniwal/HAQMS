@@ -11,16 +11,16 @@ export default function Home() {
           <Activity className="h-4 w-4" />
           Live Queue Tracking Enabled
         </div>
-        
+
         <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-teal-600 to-emerald-500 bg-clip-text text-transparent">
           HAQMS
         </h1>
         <p className="text-xl sm:text-2xl font-bold mt-2 text-slate-700 dark:text-slate-200">
           Hospital Appointment & Queue Management System
         </p>
-        
+
         <p className="mt-6 text-lg text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
-          Welcome to the HAQMS testing environment. This portal serves as a deliberately flawed, 
+          Welcome to the HAQMS testing environment. This portal serves as a deliberately flawed,
           fully functional reference application designed to evaluate software engineering candidates.
         </p>
 
@@ -59,8 +59,8 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* Assessment Notice Box */}
-        <div className="mt-16 glass max-w-xl mx-auto p-6 rounded-2xl border border-rose-500/20 shadow-md flex gap-4 text-left">
+
+        {/* <div className="mt-16 glass max-w-xl mx-auto p-6 rounded-2xl border border-rose-500/20 shadow-md flex gap-4 text-left">
           <div className="p-2 bg-rose-500/10 text-rose-500 rounded-lg h-fit">
             <ShieldAlert className="h-6 w-6" />
           </div>
@@ -71,12 +71,12 @@ export default function Home() {
               Your evaluation criteria will measure your ability to identify, trace, profile, and fix these issues systematically.
             </p>
           </div>
-        </div>
+        </div> */}
       </div>
 
-      <footer className="text-center text-slate-400 dark:text-slate-500 text-xs mt-12">
+      {/* <footer className="text-center text-slate-400 dark:text-slate-500 text-xs mt-12">
         HAQMS v1.0.0-deliberate-bugs &copy; {new Date().getFullYear()} Candidate Evaluation Framework.
-      </footer>
+      </footer> */}
     </div>
   );
 }

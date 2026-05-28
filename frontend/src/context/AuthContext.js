@@ -15,6 +15,7 @@ export const AuthProvider = ({ children }) => {
   // HARDCODED API VALUE: Intentionally hardcoding the backend base URL on the frontend!
   // This violates production standards and prevents simple domain config, but serves as
   // a perfect exercise for internship candidates to move to environment variables.
+  //FIX: Store the api url in environment variable and access from env 
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
@@ -109,7 +110,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('haqms_user');
     setToken(null);
     setUser(null);
-    router.push('/login');
+    router.replace('/login');
   };
 
   return (
