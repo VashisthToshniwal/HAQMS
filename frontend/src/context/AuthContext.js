@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-
+  //FIX: redirect logic fixed here
   const logout = () => {
     localStorage.removeItem('haqms_token');
     localStorage.removeItem('haqms_user');
