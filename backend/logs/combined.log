@@ -1,0 +1,24 @@
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:45:58.411Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:45:58.430Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:01.390Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:01.400Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:04.385Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:04.390Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:07.384Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:07.388Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:10.384Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:10.396Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:13.385Z"}
+{"ip":"::1","level":"warn","message":"Authentication attempt without token","path":"/api/queue","timestamp":"2026-05-28T08:46:13.392Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T08:51:44.983Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T08:56:49.198Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T08:57:34.061Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T08:59:36.076Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T08:59:59.295Z"}
+{"email":"reception1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:00:35.947Z"}
+{"email":"doctor1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:01:25.207Z"}
+{"email":"admin@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:01:42.145Z"}
+{"email":"admin@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:05:40.229Z"}
+{"email":"reception1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:05:57.322Z"}
+{"email":"reception1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:06:54.545Z"}
+{"email":"reception1@haqms.com","ip":"::1","level":"info","message":"Login attempt","timestamp":"2026-05-28T09:07:40.403Z"}

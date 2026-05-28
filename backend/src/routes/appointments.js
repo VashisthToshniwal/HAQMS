@@ -1,6 +1,6 @@
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
-const { authenticate } = require('../middleware/auth');
+const { authenticate, authorize } = require('../middleware/auth');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -22,36 +22,51 @@ router.get('/', authenticate, async (req, res) => {
     const appointments = await prisma.appointment.findMany({
       where,
       orderBy: { appointmentDate: 'asc' },
+      include: {
+        patient: {
+          select: {
+            id: true,
+            name: true,
+            phoneNumber: true,
+            age: true,
+            medicalHistory: true,
+          },
+        },
+
+        doctor: {
+          select: {
+            id: true,
+            name: true,
+            specialization: true,
+          },
+        },
+
+      },
     });
-
-    const detailedAppointments = [];
-
-    // N+1 triggers here: For every single appointment, we perform two extra queries!
-    for (const app of appointments) {
-      console.log(`[N+1 DB QUERY] Fetching Patient (${app.patientId}) and Doctor (${app.doctorId}) for Appointment ${app.id}`);
-      
-      const patient = await prisma.patient.findUnique({
-        where: { id: app.patientId },
+    if (!appointments || appointments.length === 0) {
+      logger.info('No appointments found', {
+        doctorId,
+        status,
+        ip: req.ip,
       });
 
-      const doctor = await prisma.doctor.findUnique({
-        where: { id: app.doctorId },
-      });
-
-      detailedAppointments.push({
-        ...app,
-        patient: patient ? { id: patient.id, name: patient.name, phoneNumber: patient.phoneNumber, age: patient.age, medicalHistory: patient.medicalHistory } : null,
-        doctor: doctor ? { id: doctor.id, name: doctor.name, specialization: doctor.specialization } : null,
+      return res.status(404).json({
+        success: false,
+        message: 'No appointments found.',
       });
     }
-
     res.json({
       success: true,
-      count: detailedAppointments.length,
-      appointments: detailedAppointments,
+      count: appointments.length,
+      appointments: appointments,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to retrieve appointments', details: error.message });
+    logger.error('Failed to retrieve appointments', {
+      message: error.message,
+      stack: error.stack,
+      ip: req.ip,
+    });
+    res.status(500).json({ error: 'Failed to retrieve appointments' });
   }
 });
 
@@ -112,13 +127,16 @@ router.post('/', authenticate, async (req, res) => {
 router.patch('/:id', authenticate, async (req, res) => {
   try {
     const { status } = req.body;
-
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: "Appointment ID is required" })
+    }
     if (!status) {
       return res.status(400).json({ error: 'Status is required' });
     }
 
     const updated = await prisma.appointment.update({
-      where: { id: req.params.id },
+      where: { id: id },
       data: { status },
     });
 

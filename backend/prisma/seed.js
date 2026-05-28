@@ -372,6 +372,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 1,
+        tokenDate: new Date(),
         patientId: patients[0].id,
         doctorId: doctor1.id,
         appointmentId: appointments[0].id,
@@ -381,6 +382,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 2,
+        tokenDate: new Date(),
         patientId: patients[1].id,
         doctorId: doctor1.id,
         appointmentId: appointments[1].id,
@@ -390,6 +392,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 3,
+        tokenDate: new Date(),
         patientId: patients[6].id,
         doctorId: doctor1.id,
         status: 'WAITING',
@@ -398,6 +401,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 1,
+        tokenDate: new Date(),
         patientId: patients[2].id,
         doctorId: doctor2.id,
         appointmentId: appointments[2].id,
@@ -407,6 +411,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 2,
+        tokenDate: new Date(),
         patientId: patients[8].id,
         doctorId: doctor2.id,
         status: 'WAITING',
@@ -415,6 +420,7 @@ async function main() {
     prisma.queueToken.create({
       data: {
         tokenNumber: 1,
+        tokenDate: new Date(),
         patientId: patients[7].id,
         doctorId: doctor3.id,
         appointmentId: appointments[5].id,

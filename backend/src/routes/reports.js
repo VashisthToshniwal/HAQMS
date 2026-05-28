@@ -6,78 +6,99 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 // GET /api/reports/doctor-stats
-// Highly inefficient nested loop aggregate reporting for admin/receptionists dashboard
-// PERFORMANCE BUG: Performs multiple nested DB queries inside a loop for every doctor.
-// Runs sequentially, blocking/scaling terrible with doctors count.
+// Generates aggregation details about available doctors
 router.get('/doctor-stats', authenticate, async (req, res) => {
   try {
     const start = Date.now();
 
-    // 1. Fetch all doctors
-    const doctors = await prisma.doctor.findMany();
-    const reportData = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
 
-    // 2. Loop through every doctor and query databases sequentially!
-    for (const doc of doctors) {
-      console.log(`[SLOW REPORT] Querying stats sequentially for doctor: ${doc.name}`);
+    // FIX 1: The O(1) Database Strategy
+    // We fire exactly 3 queries concurrently using Promise.all to get everything we need.
+    const [doctors, appointmentStats, queueStats] = await Promise.all([
+      // Query 1: Get minimal doctor details
+      prisma.doctor.findMany({
+        select: { id: true, name: true, specialization: true, department: true, consultationFee: true }
+      }),
+      // Query 2: Group all appointments by doctor and status
+      prisma.appointment.groupBy({
+        by: ['doctorId', 'status'],
+        _count: { _all: true }
+      }),
+      // Query 3: Group today's queue tokens by doctor
+      prisma.queueToken.groupBy({
+        by: ['doctorId'],
+        where: { createdAt: { gte: today } },
+        _count: { _all: true }
+      })
+    ]);
 
-      // Count total appointments
-      const totalAppointments = await prisma.appointment.count({
-        where: { doctorId: doc.id },
-      });
+    // FIX 2: In-Memory Mapping
+    // We construct a fast-lookup dictionary so we don't have to loop through arrays inefficiently.
+    const statsMap = {};
 
-      // Count completed appointments
-      const completedAppointments = await prisma.appointment.count({
-        where: { doctorId: doc.id, status: 'COMPLETED' },
-      });
+    doctors.forEach(doc => {
+      statsMap[doc.id] = {
+        totalAppointments: 0,
+        completedAppointments: 0,
+        cancelledAppointments: 0,
+        todayQueueSize: 0,
+      };
+    });
 
-      // Count cancelled appointments
-      const cancelledAppointments = await prisma.appointment.count({
-        where: { doctorId: doc.id, status: 'CANCELLED' },
-      });
+    // Populate the dictionary with our bulk appointment data
+    appointmentStats.forEach(stat => {
+      if (statsMap[stat.doctorId]) {
+        statsMap[stat.doctorId].totalAppointments += stat._count._all;
 
-      // Fetch queue tokens count today
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const queueTokensCount = await prisma.queueToken.count({
-        where: {
-          doctorId: doc.id,
-          createdAt: { gte: today },
-        },
-      });
+        if (stat.status === 'COMPLETED') {
+          statsMap[stat.doctorId].completedAppointments = stat._count._all;
+        }
+        if (stat.status === 'CANCELLED') {
+          statsMap[stat.doctorId].cancelledAppointments = stat._count._all;
+        }
+      }
+    });
 
-      // Calculate total potential revenue
-      const appointmentsList = await prisma.appointment.findMany({
-        where: { doctorId: doc.id, status: 'COMPLETED' },
-      });
-      const revenue = appointmentsList.length * doc.consultationFee;
+    // Populate the dictionary with our bulk queue data
+    queueStats.forEach(stat => {
+      if (statsMap[stat.doctorId]) {
+        statsMap[stat.doctorId].todayQueueSize = stat._count._all;
+      }
+    });
 
-      // Add artifical wait to simulate load under scaled database
-      // "Ensures database connection doesn't drop" - junior dev comment
-      await new Promise(r => setTimeout(r, 80));
+    // FIX 3: Assemble the final report synchronously without database calls
+    const reportData = doctors.map(doc => {
+      const stats = statsMap[doc.id];
 
-      reportData.push({
+      // FIX 4: Calculate revenue using math, not by fetching data rows!
+      const revenue = stats.completedAppointments * doc.consultationFee;
+
+      return {
         id: doc.id,
         name: doc.name,
         specialization: doc.specialization,
         department: doc.department,
-        totalAppointments,
-        completedAppointments,
-        cancelledAppointments,
-        todayQueueSize: queueTokensCount,
-        revenue,
-      });
-    }
+        totalAppointments: stats.totalAppointments,
+        completedAppointments: stats.completedAppointments,
+        cancelledAppointments: stats.cancelledAppointments,
+        todayQueueSize: stats.todayQueueSize,
+        revenue: revenue
+      };
+    });
 
     const durationMs = Date.now() - start;
 
-    res.json({
-      success: true,
+    res.status(200).json({
+      message: 'Report generated successfully',
       timeTakenMs: durationMs,
       data: reportData,
     });
   } catch (error) {
-    res.status(500).json({ error: 'Failed to generate report', details: error.message });
+    // FIX 5: Secure error handling
+    console.error('Report generation error:', error);
+    res.status(500).json({ error: 'Failed to generate report. Please try again later.' });
   }
 });
 

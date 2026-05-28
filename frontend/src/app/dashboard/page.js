@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/common/Navbar';
 import { useRouter } from 'next/navigation';
-import { 
-  Users, CalendarDays, Activity, Search, Sparkles, UserPlus, 
+import {
+  Users, CalendarDays, Activity, Search, Sparkles, UserPlus,
   Trash2, ClipboardList, TrendingUp, DollarSign, Award, Clock,
   ArrowRight, ShieldAlert, CheckCircle, Volume2
 } from 'lucide-react';
@@ -34,7 +34,7 @@ export default function Dashboard() {
   const [patientSearch, setPatientSearch] = useState('');
   const [patientGender, setPatientGender] = useState('All');
   const [patientsPagination, setPatientsPagination] = useState({ page: 1, totalPages: 1 });
-  
+
   // Registration Form
   const [regName, setRegName] = useState('');
   const [regEmail, setRegEmail] = useState('');
@@ -70,7 +70,7 @@ export default function Dashboard() {
   // ==========================================
   // RECEPTIONIST FUNCTIONS
   // ==========================================
-  
+
   // Fetch Patients List
   const fetchPatients = async (page = 1) => {
     setPatientsLoading(true);
@@ -327,7 +327,7 @@ export default function Dashboard() {
   // ==========================================
   // ADMIN SYSTEM WORKFLOWS
   // ==========================================
-  
+
   // Slow report generator fetch
   const generateSystemReport = async () => {
     setAdminReportLoading(true);
@@ -369,7 +369,7 @@ export default function Dashboard() {
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-6 sm:p-8">
-        
+
         {/* Navigation Tabs based on Role */}
         <div className="flex border-b border-slate-200 dark:border-slate-800 mb-8 overflow-x-auto gap-4">
           {user.role === 'ADMIN' && (
@@ -507,7 +507,7 @@ export default function Dashboard() {
                                 >
                                   Check In
                                 </button>
-                                
+
                                 {/* Security flaw testing: Receptionist or doctor can delete since check is bypassed */}
                                 <button
                                   onClick={() => handleDeletePatient(p.id)}
@@ -691,7 +691,7 @@ export default function Dashboard() {
                     className="block w-full px-3 py-2 border border-slate-300 dark:border-slate-700 bg-white/50 dark:bg-slate-900/50 rounded-lg text-slate-900 dark:text-slate-100 text-sm focus:outline-none"
                   >
                     <option value="">-- Choose Physician --</option>
-                    {doctorsList.map(d => (
+                    {doctorsList?.map(d => (
                       <option key={d.id} value={d.id}>{d.name} - {d.specialization} (${d.consultationFee})</option>
                     ))}
                   </select>
@@ -740,7 +740,7 @@ export default function Dashboard() {
 
               <div className="space-y-6">
                 <div className="p-4 rounded-xl border border-teal-500/25 bg-teal-500/10 text-slate-700 dark:text-slate-300 text-xs leading-5">
-                  <strong>Token Generation Engine Note:</strong> Direct arrivals bypass appointments. The token engine automatically fetches the current days maximum token size and increments. 
+                  <strong>Token Generation Engine Note:</strong> Direct arrivals bypass appointments. The token engine automatically fetches the current days maximum token size and increments.
                   <span className="block mt-1 font-bold text-rose-500 uppercase tracking-wide">Warning: Vulnerable to check-in race conditions!</span>
                 </div>
 
@@ -878,7 +878,7 @@ export default function Dashboard() {
                       Gender: {selectedPatientHistory.gender} | Contact: {selectedPatientHistory.phoneNumber}
                     </p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => setSelectedPatientHistory(null)}
                     className="text-xs font-bold text-slate-400 hover:text-slate-600"
                   >
@@ -888,7 +888,7 @@ export default function Dashboard() {
 
                 <div className="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-xs space-y-2">
                   <h4 className="font-bold text-slate-400 uppercase tracking-wider">Clinical Background Information</h4>
-                  
+
                   {/* FRONTEND CRASH BUG:
                       Assuming medicalHistory is always populated. Accesses a method on a nullable property
                       without optional chaining! If medicalHistory is null (which is the case for Batman, Clark Kent, etc.),
@@ -900,8 +900,8 @@ export default function Dashboard() {
 
                 <div className="pt-2 flex justify-between items-center text-xs">
                   {/* Incomplete Missing Route trigger -> will route to 404 page! */}
-                  <Link 
-                    href={`/patients/${selectedPatientHistory.id}/history-records`} 
+                  <Link
+                    href={`/patients/${selectedPatientHistory.id}/history-records`}
                     className="text-teal-600 font-extrabold hover:underline flex items-center gap-1"
                   >
                     View Diagnostic Reports Details (Legacy App)
@@ -1026,7 +1026,7 @@ export default function Dashboard() {
                     <Clock className="h-5 w-5 text-amber-500 shrink-0" />
                     <div>
                       <strong>Performance Diagnostic:</strong> API execution resolved in{' '}
-                      <span className="font-bold text-amber-500">{adminReportData.timeTakenMs} ms</span>. 
+                      <span className="font-bold text-amber-500">{adminReportData.timeTakenMs} ms</span>.
                       Sequential nested database calls loops reduce throughput. Optimization using Promise.all or single join aggregate is required.
                     </div>
                   </div>
@@ -1127,7 +1127,7 @@ export default function Dashboard() {
             <div className="p-3 bg-rose-500/10 text-rose-500 text-xs rounded-lg border border-rose-500/20 font-semibold leading-5 flex gap-3">
               <ShieldAlert className="h-5 w-5 shrink-0" />
               <div>
-                <strong>SQL Vulnerability alert:</strong> This search executes raw interpolation: 
+                <strong>SQL Vulnerability alert:</strong> This search executes raw interpolation:
                 <code className="block bg-black/10 dark:bg-black/30 p-1.5 rounded mt-1 font-mono">
                   SELECT * FROM &quot;Doctor&quot; WHERE name ILIKE &apos;%&#123;query&#125;%&apos;
                 </code>
@@ -1137,7 +1137,7 @@ export default function Dashboard() {
 
             {/* Doctors Result List */}
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {doctorsList.map((doc) => (
+              {doctorsList?.map((doc) => (
                 <div
                   key={doc.id}
                   className="p-5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-500/5 flex flex-col justify-between"
